@@ -1,7 +1,9 @@
- import bcrypt from "bcrypt";
- import {userCollection, UserSchema} from"../index.js"
- 
- export async function users (req, res){
+import bcrypt from "bcrypt";
+import {v4 as uuidv4} from "uuid";
+import {userCollection} from"../index.js"
+import { UserSchema } from "../schema/user.shema.js";
+
+export async function users (req, res){
   const user = req.body
   const {error} = UserSchema.validate(user, {abortEarly:false})
 
@@ -26,3 +28,28 @@
   }
   res.send()
 };
+
+export async function signIn(req, res) {
+  const {email, password} = req.body 
+  const token = uuidv4()
+
+  try {
+    const ExistsUser = await userCollection.findOne({email})
+    if(!ExistsUser){
+      return res.sendStatus(401)
+    }
+
+    const ExistsPassword = bcrypt.compareSync(password, ExistsUser.password);
+    if(!ExistsPassword){
+       return res.sendStatus(401) 
+    }
+    await db.collection("sessions").insertOne({
+      token,
+      usersId: ExistsUser._id,
+    })
+
+    res.send({token});
+  } catch (error) {
+    res.send(500)
+  }
+}
