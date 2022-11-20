@@ -15,9 +15,8 @@
   try {
     const alreadyExistUser = await userCollection.findOne({email:user.email})
     if(alreadyExistUser){
-      return res.status(409)
+      return res.sendStatus(409)
     }
-
     await userCollection.insertOne({...user,password:cryptPassword})
     res.sendStatus(201)
 
