@@ -3,9 +3,8 @@ import { MongoClient} from "mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import { users, signIn } from "./controllers/user.controller.js";
-import { wallet, getWallet } from "./controllers/wallet.controller.js";
-import { auth } from './middlewares/auth.middleware.js'
+import userRouter from './routes/user.route.js'
+import walletRouter from './routes/wallet.route.js'
 
 //# CONFIG
 dotenv.config();
@@ -27,12 +26,7 @@ export const walletCollection = db.collection("wallet")
 export const sessionsCollection = db.collection("sessions")
 // #ROTA
 
-app.post("/sign-up",users);
-
-app.post("/sign-in",signIn);
-
-app.post("/wallet", auth, wallet);
-
-app.get("/wallet", auth, getWallet);
+app.use(userRouter);
+app.use(walletRouter);
 
 app.listen(4000, () => console.log("Port 4000"));
