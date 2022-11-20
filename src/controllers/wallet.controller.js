@@ -20,13 +20,13 @@ export async function wallet(req, res) {
   }
 
   try {
-    const wallet = await walletCollection.insertOne({
+    await walletCollection.insertOne({
       description,
       value,
       type,
       createdAt: Date.now(),
     })
-    res.send(wallet)
+    res.send()
   } catch (error) {
     res.status(500).send(error)
   }
