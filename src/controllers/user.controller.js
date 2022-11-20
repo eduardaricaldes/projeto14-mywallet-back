@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import {v4 as uuidv4} from "uuid";
 import { userCollection, sessionsCollection } from "../database/collections.js"
 import { UserSchema } from "../schema/user.shema.js";
+import { AuthSchema } from '../schema/auth.schema.js';
 
 export async function users (req, res){
   const user = req.body
@@ -68,5 +69,43 @@ export async function signIn(req, res) {
   } catch (error) {
     console.error(error)
     res.sendStatus(500)
+  }
+}
+
+export async function logout(req, res) {
+  const token = req.get('Authorization');
+
+  const { error } = AuthSchema.validate({
+    token,
+  })
+
+  if(error) {
+    const erros = error.details.map((details) => details.message)
+    return res.status(401).send(erros)
+  }
+
+  try {
+    const session = await sessionsCollection.findOne({
+      token,
+    })
+
+    if(session !== null) {
+      const user = await userCollection.findOne({ 
+        _id: session.usersId 
+      });
+      if (!user) {
+        return res.status(400).send();
+      }
+
+      await sessionsCollection.deleteOne({
+        _id: session._id,
+        usersId: session.usersId,
+      })
+      res.send();
+    }else {
+      res.status(400).send();
+    }
+  } catch (error) {
+    res.status(500).send(error)
   }
 }
