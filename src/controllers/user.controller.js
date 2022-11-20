@@ -60,7 +60,11 @@ export async function signIn(req, res) {
       usersId: ExistsUser._id,
     })
 
-    res.send({token});
+    res.send({
+      token,
+      name: ExistsUser.name,
+      email: ExistsUser.email,
+    });
   } catch (error) {
     console.error(error)
     res.sendStatus(500)
