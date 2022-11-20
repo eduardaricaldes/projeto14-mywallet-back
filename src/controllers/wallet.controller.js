@@ -34,7 +34,7 @@ export async function wallet(req, res) {
 
 export async function getWallet(req, res) {
   try {
-    const response = await walletCollection.find()
+    const response = await walletCollection.find().toArray()
     res.send(response);
   } catch (error) {
     res.status(500).send(error)

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import {v4 as uuidv4} from "uuid";
-import {userCollection} from"../index.js"
+import { userCollection, sessionsCollection } from"../index.js"
 import { UserSchema } from "../schema/user.shema.js";
 
 export async function users (req, res){
@@ -43,13 +43,14 @@ export async function signIn(req, res) {
     if(!ExistsPassword){
        return res.sendStatus(401) 
     }
-    await db.collection("sessions").insertOne({
+    sessionsCollection.insertOne({
       token,
       usersId: ExistsUser._id,
     })
 
     res.send({token});
   } catch (error) {
-    res.send(500)
+    console.error(error)
+    res.sendStatus(500)
   }
 }
