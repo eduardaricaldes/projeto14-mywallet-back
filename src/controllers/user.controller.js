@@ -43,7 +43,19 @@ export async function signIn(req, res) {
     if(!ExistsPassword){
        return res.sendStatus(401) 
     }
-    sessionsCollection.insertOne({
+
+    const userAlreadyLogged = await sessionsCollection.findOne({
+      usersId: ExistsUser._id
+    })
+
+    if(userAlreadyLogged) {
+      return res
+        .status(401)
+        .send({ message: "Você já está logado, sai para logar novamente" });
+    }
+
+
+    await sessionsCollection.insertOne({
       token,
       usersId: ExistsUser._id,
     })
