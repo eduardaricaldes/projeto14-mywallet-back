@@ -1,5 +1,5 @@
 import { AuthSchema } from '../schema/auth.schema.js';
-import { sessionsCollection } from '../index.js';
+import { sessionsCollection } from "../database/collections.js"
 
 export async function auth(req, res, next) {
   const token = req.get('Authorization');

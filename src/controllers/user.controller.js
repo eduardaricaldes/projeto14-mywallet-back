@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import {v4 as uuidv4} from "uuid";
-import { userCollection, sessionsCollection } from"../index.js"
+import { userCollection, sessionsCollection } from "../database/collections.js"
 import { UserSchema } from "../schema/user.shema.js";
 
 export async function users (req, res){

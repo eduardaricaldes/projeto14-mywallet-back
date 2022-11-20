@@ -1,5 +1,5 @@
 import { WalletSchema } from "./../schema/wallet.schema.js"
-import { walletCollection } from "../index.js";
+import { walletCollection } from "../database/collections.js"
 
 export async function wallet(req, res) {
   const {
