@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import { users, signIn } from "./controllers/user.controller.js";
+import { wallet, getWallet } from "./controllers/wallet.controller.js";
 
 //# CONFIG
 dotenv.config();
@@ -21,11 +22,16 @@ try {
 
 const db = mongoClient.db("dbDuda");
 export const userCollection = db.collection("users")
+export const walletCollection = db.collection("wallet")
 
 // #ROTA
 
 app.post("/sign-up",users);
 
-app.post("/sign-in",signIn)
+app.post("/sign-in",signIn);
+
+app.post("/wallet", wallet);
+
+app.get("/wallet", getWallet);
 
 app.listen(4000, () => console.log("Port 4000"));
