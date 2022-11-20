@@ -1,5 +1,5 @@
 import { AuthSchema } from '../schema/auth.schema.js';
-import { sessionsCollection } from "../database/collections.js"
+import { sessionsCollection, userCollection } from "../database/collections.js"
 
 export async function auth(req, res, next) {
   const token = req.get('Authorization');
@@ -14,10 +14,20 @@ export async function auth(req, res, next) {
   }
 
   try {
-    const response = await sessionsCollection.findOne({
+    const session = await sessionsCollection.findOne({
       token,
     })
-    if(response !== null) {
+
+    if(session !== null) {
+      const user = await userCollection.findOne({ 
+        _id: session.usersId 
+      });
+      if (!user) {
+        return res.status(401).send('Unauthorized');
+      }
+
+      delete user.password;
+      req.user = user;
       next();
     }else {
       res.status(401).send('Unauthorized');

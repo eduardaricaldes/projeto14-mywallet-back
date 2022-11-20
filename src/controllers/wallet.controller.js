@@ -25,6 +25,7 @@ export async function wallet(req, res) {
       value,
       type,
       createdAt: Date.now(),
+      userId: req.user._id,
     })
     res.send()
   } catch (error) {
@@ -34,9 +35,12 @@ export async function wallet(req, res) {
 
 export async function getWallet(req, res) {
   try {
-    const response = await walletCollection.find().toArray()
+    const response = await walletCollection.find({
+      userId: req.user._id,
+    }).toArray()
     res.send(response);
   } catch (error) {
+    console.log(error)
     res.status(500).send(error)
   }
 };
