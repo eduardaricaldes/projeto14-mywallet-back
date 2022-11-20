@@ -21,7 +21,7 @@ try {
   console.log (error)
 }
 
-const db = mongoClient.db("dbDuda");
+const db = mongoClient.db(process.env.DATABASE_NAME);
 export const userCollection = db.collection("users")
 export const walletCollection = db.collection("wallet")
 export const sessionsCollection = db.collection("sessions")
